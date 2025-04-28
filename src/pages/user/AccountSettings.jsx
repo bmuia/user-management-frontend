@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import axios from 'axios'
+import api from '../../config/auth'
 
 function AccountSettings() {
   const [confirm, setConfirm] = useState(false)
@@ -11,13 +11,9 @@ function AccountSettings() {
     setLoading(true)
     setError('')
     try {
-      // Replace with your actual endpoint
-      await axios.post('http://localhost:8000/api/users/deactivate-account/',{
-}, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('access')}`,
-        },
-      })
+  
+      await api.post('/api/users/deactivate-account/',{
+})
       setSuccess(true)
     } catch (err) {
       setError('Failed to deactivate account.')

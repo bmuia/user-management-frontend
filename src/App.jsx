@@ -14,13 +14,12 @@ function App() {
       <Router>
       <Toaster position="top-center" reverseOrder={false} />      
         <Routes>              
-          <Route path="/register" element={<Register />} />
+          <Route path="/" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/verify-email" element={<VerifyEmailPage />} />
           <Route path="/reset-password" element={<PasswordReset />} />
           <Route path="/password-reset-confirm" element={<PasswordResetConfirm />} />
           <Route element={<PrivateRoutes />}>
-          <Route path="/" element={<h1>Home Page</h1>} />
           <Route path="/dashboard" element={<CustomDashboard />} />
 
           </Route>

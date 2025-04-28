@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import api from '../../config/auth';
 
 function DeactivateAccount() {
   const handleDeactivate = async () => {
@@ -8,7 +8,7 @@ function DeactivateAccount() {
 
     try {
       const token = localStorage.getItem('accessToken');
-      await axios.post('http://localhost:8000/api/users/deactivate-account/', {}, {
+      await api.post('/api/users/deactivate-account/', {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert('Account deactivated. You will be logged out.');

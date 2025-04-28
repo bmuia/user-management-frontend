@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import axios from "axios";
+import api from "../config/auth";
 
 function VerifyEmailPage() {
   const [searchParams] = useSearchParams();
@@ -14,8 +14,7 @@ function VerifyEmailPage() {
       return;
     }
 
-    axios
-      .get(`http://localhost:8000/api/users/verify-email/?token=${token}`)
+    api.get(`/api/users/verify-email/?token=${token}`)
       .then((res) => {
         setStatus("🎉 Your email has been verified! You can now log in.");
       })

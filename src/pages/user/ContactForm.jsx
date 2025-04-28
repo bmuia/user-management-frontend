@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import axios from 'axios'
+import api from '../../config/auth'
 import toast from 'react-hot-toast'
 
 function ContactForm() {
@@ -11,14 +11,8 @@ function ContactForm() {
     setLoading(true)
 
     try {
-      const res = await axios.post('http://localhost:8000/api/notifications/contact-admin/', {
+      const res = await api.post('/api/notifications/contact-admin/', {
        body: message
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('access')}`
-        }
       }
       )
       console.log(res.data)
