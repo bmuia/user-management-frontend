@@ -7,28 +7,32 @@ import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import PrivateRoutes from './components/PrivateRoute';
 import { Toaster } from 'react-hot-toast';
-import CustomDashboard from './pages/user/CustomDashboard ';
+import CustomDashboard from './pages/user/CustomDashboard';
 import AuthProvider from './context/AuthContext';
 import Error from './pages/user/Error';
+import { Analytics } from '@vercel/analytics/react';
+
 function App() {
   return (
     <div>
       <Router>
         <AuthProvider>
-        <Toaster position="top-center" reverseOrder={false} />
-        <Routes>
-          <Route path="/" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/verify-email" element={<VerifyEmailPage />} />
-          <Route path="/reset-password" element={<PasswordReset />} />
-          <Route path="/password-reset-confirm" element={<PasswordResetConfirm />} />
-          <Route path="/error" element={<Error />} />
-          <Route path="*" element={<h1>Page not found</h1>} />
-          {/* Private Routes */}
-          <Route element={<PrivateRoutes />}>
-            <Route path="/dashboard" element={<CustomDashboard />} />
-          </Route>
-        </Routes>
+          <Toaster position="top-center" reverseOrder={false} />
+          <Analytics />
+          <Routes>
+            <Route path="/" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/verify-email" element={<VerifyEmailPage />} />
+            <Route path="/reset-password" element={<PasswordReset />} />
+            <Route path="/password-reset-confirm" element={<PasswordResetConfirm />} />
+            <Route path="/error" element={<Error />} />
+            <Route path="*" element={<h1>Page not found</h1>} />
+            
+            {/* Private Routes */}
+            <Route element={<PrivateRoutes />}>
+              <Route path="/dashboard" element={<CustomDashboard />} />
+            </Route>
+          </Routes>
         </AuthProvider>
       </Router>
     </div>
