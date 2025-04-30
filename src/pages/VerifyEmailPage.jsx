@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import api from "../config/auth";
 import toast from "react-hot-toast";
+import axios from "axios";
+import { API_URL } from "../config/apiConfig";
 
 function VerifyEmailPage() {
   const [searchParams] = useSearchParams();
@@ -20,7 +21,7 @@ function VerifyEmailPage() {
       }
 
       try {
-        const res = await api().get(`api/users/verify-email/?token=${token}`);
+        const res = await axios.get(`${API_URL}api/users/verify-email/?token=${token}`);
         const successMsg = "🎉 Your email has been verified! Redirecting to login...";
         setStatus(successMsg);
         toast.success("Email verified successfully!");
