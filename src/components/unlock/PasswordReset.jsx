@@ -1,8 +1,7 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
-
-const API_URL = 'http://localhost:8000/'
+import { API_URL } from '../../config/apiConfig'
 
 function PasswordReset() {
   const [email, setEmail] = useState('')

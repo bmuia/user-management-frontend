@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import axios from 'axios'
-
-const API_URL = 'http://localhost:8000/'
+import { API_URL } from '../../config/apiConfig'
 
 function PasswordResetConfirm() {
   const [searchParams] = useSearchParams()
@@ -14,7 +13,7 @@ function PasswordResetConfirm() {
 
   const token = searchParams.get('token')
 
-  // Place the useEffect inside the component body
+
   useEffect(() => {
     if (!token) toast.error('Invalid password reset link.')
   }, [token])

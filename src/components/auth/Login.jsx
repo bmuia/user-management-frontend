@@ -3,8 +3,8 @@ import axios from 'axios'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../../context/AuthContext'
+import { API_URL } from '../../config/apiConfig'
 
-const API_URL = 'http://localhost:8000'
 
 function Login() {
   const [email, setEmail] = useState('')

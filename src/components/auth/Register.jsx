@@ -2,8 +2,7 @@ import React,{useState} from 'react'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-
-const API_URL = 'http://localhost:8000/'
+import { API_URL } from '../../config/apiConfig'
 
 function Register() {
   const [email, setEmail] = useState('')
