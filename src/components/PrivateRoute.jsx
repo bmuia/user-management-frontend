@@ -10,9 +10,9 @@ const PrivateRoutes = () => {
     return <Navigate to="/login" />;
   }
 
-  if (!user.is_verified) {
-    return <Navigate to="/error" />;
-  }
+  // if (!user.is_verified) {
+  //   return <Navigate to="/error" />;
+  // }
 
   return <Outlet />;
 };
