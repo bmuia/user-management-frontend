@@ -22,6 +22,10 @@ function Register() {
     }
 
     try {
+      const apiUrl = `${API_URL}api/users/register/`;
+
+      // Check if the full URL is valid before making the request
+      console.log("Full API URL:", apiUrl); 
       const res = await axios.post(`${API_URL}api/users/register/`, {
         email,
         password,
