@@ -9,30 +9,34 @@ function VerifyEmailPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = searchParams.get("token");
+    const verifyEmail = async () => {
+      const token = searchParams.get("token");
 
-    if (!token) {
-      const errorMsg = "❌ Invalid verification link.";
-      setStatus(errorMsg);
-      toast.error(errorMsg);
-      return;
-    }
+      if (!token) {
+        const errorMsg = "❌ Invalid verification link.";
+        setStatus(errorMsg);
+        toast.error(errorMsg);
+        return;
+      }
 
-    api
-      .get(`api/users/verify-email/?token=${token}`)
-      .then((res) => {
+      try {
+        const res = await api().get(`api/users/verify-email/?token=${token}`);
         const successMsg = "🎉 Your email has been verified! Redirecting to login...";
         setStatus(successMsg);
         toast.success("Email verified successfully!");
+
+        // Redirect to login after 3 seconds
         setTimeout(() => {
           navigate("/login");
         }, 3000);
-      })
-      .catch((err) => {
+      } catch (err) {
         const errorMsg = "❌ Verification failed. The link may be invalid or expired.";
         setStatus(errorMsg);
         toast.error("Verification failed!");
-      });
+      }
+    };
+
+    verifyEmail(); // Call the async function
   }, [searchParams, navigate]);
 
   return (
