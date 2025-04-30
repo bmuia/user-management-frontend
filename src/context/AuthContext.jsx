@@ -6,16 +6,17 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('access');
-    if (token) {
-      setUser({ token }); 
+    // Get the token from localStorage
+    const accessToken = localStorage.getItem('access');
+    if (accessToken) {
+      setUser({ token: accessToken });
     }
   }, []);
-  
 
-  const login = (userData) => {
-    localStorage.setItem('access', JSON.stringify(userData));
-    setUser(userData);
+  const login = (accessToken) => {
+    // Save only the access token string
+    localStorage.setItem('access', accessToken);
+    setUser({ token: accessToken });
   };
 
   const logout = () => {

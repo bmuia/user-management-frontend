@@ -27,7 +27,8 @@ function Login() {
       })
 
       const userData = res.data
-      login(userData)
+      login(userData.access)
+
 
       toast.success('Login successful!')
       navigate('/dashboard')
