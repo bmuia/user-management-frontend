@@ -7,7 +7,7 @@ import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import PrivateRoutes from './components/PrivateRoute';
 import { Toaster } from 'react-hot-toast';
-import CustomDashboard from './pages/user/CustomDashboard';
+import CustomDashboard from './pages/user/CustomDashboard ';
 import AuthProvider from './context/AuthContext';
 import Error from './pages/user/Error';
 import { Analytics } from '@vercel/analytics/react';
