@@ -1,7 +1,9 @@
 import React,{useState} from 'react'
-import api from '../../config/auth'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+
+const API_URL = 'http://localhost:8000/'
 
 function Register() {
   const [email, setEmail] = useState('')
@@ -21,7 +23,7 @@ function Register() {
     }
 
     try {
-      const res = await api.post('/api/users/register/', {
+      const res = await axios.post(`${API_URL}api/users/register/`, {
         email,
         password,
         password2: confirmPassword,

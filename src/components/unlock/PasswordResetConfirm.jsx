@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import api from '../../config/auth'
 import toast from 'react-hot-toast'
+import axios from 'axios'
+
+const API_URL = 'http://localhost:8000/'
 
 function PasswordResetConfirm() {
   const [searchParams] = useSearchParams()
@@ -10,17 +12,16 @@ function PasswordResetConfirm() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const navigate = useNavigate()
 
+  const token = searchParams.get('token')
+
+  // Place the useEffect inside the component body
+  useEffect(() => {
+    if (!token) toast.error('Invalid password reset link.')
+  }, [token])
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-
-    const token = searchParams.get('token')
-
-
-React.useEffect(() => {
-  if (!token) toast.error('Invalid password reset link.')
-}, [token])
-
 
     if (!token) {
       toast.error('Invalid or missing password reset token.')
@@ -35,7 +36,7 @@ React.useEffect(() => {
     }
 
     try {
-      const res = await api.post(`/api/users/password-reset-confirm/`, {
+      const res = await axios.post(`${API_URL}api/users/password-reset-confirm/`, {
         token,
         new_password: password,
       })

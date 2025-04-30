@@ -1,6 +1,8 @@
+import axios from 'axios'
 import React, { useState } from 'react'
-import api from '../../config/auth'
 import toast from 'react-hot-toast'
+
+const API_URL = 'http://localhost:8000/'
 
 function PasswordReset() {
   const [email, setEmail] = useState('')
@@ -11,7 +13,7 @@ function PasswordReset() {
     setLoading(true)
 
     try {
-      const res = await api.post('/api/users/reset-password/', {
+      const res = await axios.post(`${API_URL}api/users/reset-password/`, {
         email,
       })
       console.log(res.data)

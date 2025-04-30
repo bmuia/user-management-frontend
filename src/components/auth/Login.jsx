@@ -1,43 +1,40 @@
-import React, { useState } from 'react'
-import api from '../../config/auth'
-import { useNavigate } from 'react-router-dom'
+import React, { useState, useContext } from 'react'
+import axios from 'axios'
 import toast from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
+import { AuthContext } from '../../context/AuthContext'
+
+const API_URL = 'http://localhost:8000'
 
 function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [success, setSuccess] = useState(false)
   const navigate = useNavigate()
+
+  const { login } = useContext(AuthContext)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
     setError('')
-    setSuccess(false)
 
     try {
-      const res = await api.post('/api/users/login/', {
+      const res = await axios.post(`${API_URL}/api/users/login/`, {
         email,
         password
       })
 
-      const { access, refresh } = res.data
+      const userData = res.data
+      login(userData)
 
-      // Store tokens in localStorage
-      localStorage.setItem('access', access)
-      localStorage.setItem('refresh', refresh)
-
-      // Notify the user
       toast.success('Login successful!')
-
-      // Redirect to dashboard
       navigate('/dashboard')
     } catch (err) {
       console.error(err)
       toast.error('Login failed. Please check your credentials.')
-      setError('Login failed. Please check your credentials.')
+      setError('Invalid credentials.')
     } finally {
       setLoading(false)
     }
@@ -47,7 +44,7 @@ function Login() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-200 px-4 py-12">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 space-y-6">
         <h2 className="text-3xl font-bold text-center text-gray-800">Login</h2>
-        
+
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700">Email</label>
@@ -87,27 +84,19 @@ function Login() {
         </form>
 
         {error && (
-          <p className="text-red-500 text-center mt-2">
-            {error}
-          </p>
+          <p className="text-red-500 text-center mt-2">{error}</p>
         )}
 
-        {success && (
-          <p className="text-green-500 text-center mt-2">
-            Login successful!
-          </p>
-        )}
-
-        <div className="mt-6 text-center">
+        <div className="mt-6 text-center text-sm text-gray-600">
           <p>
-            Don't have an account?{' '}
-            <a href="/" className="text-blue-600 hover:text-blue-700">
+            Don’t have an account?{' '}
+            <a href="/" className="text-blue-600 hover:text-blue-700 font-medium">
               Register here
             </a>
           </p>
           <p className="mt-2">
             Forgot your password?{' '}
-            <a href="/reset-password" className="text-blue-600 hover:text-blue-700">
+            <a href="/reset-password" className="text-blue-600 hover:text-blue-700 font-medium">
               Reset it here
             </a>
           </p>

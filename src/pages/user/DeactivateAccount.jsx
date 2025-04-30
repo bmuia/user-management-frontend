@@ -1,14 +1,17 @@
 import React from 'react';
 import api from '../../config/auth';
+import { useNavigate } from 'react-router-dom';
 
 function DeactivateAccount() {
+
+
   const handleDeactivate = async () => {
     const confirmed = window.confirm("Are you sure you want to deactivate your account?");
     if (!confirmed) return;
 
     try {
       const token = localStorage.getItem('accessToken');
-      await api.post('/api/users/deactivate-account/', {}, {
+      await api().post('/api/users/deactivate-account/', {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert('Account deactivated. You will be logged out.');

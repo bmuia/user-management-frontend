@@ -12,7 +12,7 @@ function AccountSettings() {
     setError('')
     try {
   
-      await api.post('/api/users/deactivate-account/',{
+      await api().post('/api/users/deactivate-account/',{
 })
       setSuccess(true)
     } catch (err) {
