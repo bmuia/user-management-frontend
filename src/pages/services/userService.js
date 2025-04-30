@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { API_URL } from '../config/apiConfig';
 
-const API_BASE = 'http://localhost:8000/api/users/profile';
+const API_BASE = `${API_URL}api/users/profile`;
 
 const authHeader = () => ({
   headers: {

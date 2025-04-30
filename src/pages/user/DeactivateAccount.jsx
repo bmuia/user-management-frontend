@@ -11,7 +11,7 @@ function DeactivateAccount() {
 
     try {
       const token = localStorage.getItem('accessToken');
-      await api().post('/api/users/deactivate-account/', {}, {
+      await api().post('api/users/deactivate-account/', {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert('Account deactivated. You will be logged out.');

@@ -11,7 +11,7 @@ function ContactForm() {
     setLoading(true)
 
     try {
-      const res = await api().post('/api/notifications/contact-admin/', {
+      const res = await api().post('api/notifications/contact-admin/', {
        body: message
       }
       )
