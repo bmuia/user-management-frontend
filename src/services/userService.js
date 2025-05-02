@@ -8,7 +8,7 @@ export const getUser = async () => {
   return res.data
 }
 
-export const updateUser = async (payload) => {
+export const updateUser = async () => {
   const res = await axios.put(`${API_URL}api/users/me/`)
   return res.data
 }
