@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../../context/AuthContext'
 import { API_URL } from '../../config/apiConfig'
 
-
 function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -21,17 +20,16 @@ function Login() {
     setError('')
 
     try {
-      const res = await axios.post(`${API_URL}api/users/login/`, {
-        email,
-        password
-      })
-
-      const userData = res.data
-      login(userData.access)
-
-
+      const res = await axios.post(
+        `${API_URL}api/users/login/`,
+        { email, password },
+        { withCredentials: true } // Cookie will be set here
+      )
+      
+      await login() // call context login to fetch user info
       toast.success('Login successful!')
       navigate('/dashboard')
+      
     } catch (err) {
       console.error(err)
       toast.error('Login failed. Please check your credentials.')
