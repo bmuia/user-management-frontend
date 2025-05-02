@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { getUser, updateUser, deleteUser } from '../../services/userService'
-import { getUserIdFromToken } from '../../utils/auth'
 
 function ProfileInfo() {
   const [me, setMe] = useState(null)
@@ -9,14 +8,12 @@ function ProfileInfo() {
   const [success, setSuccess] = useState(false)
   const [editEmail, setEditEmail] = useState('')
 
-  const userId = getUserIdFromToken()
-
   const getMe = async () => {
     setLoading(true)
     setError('')
     setSuccess(false)
     try {
-      const data = await getUser(userId)
+      const data = await getUser()
       setMe(data)
       setEditEmail(data.email)
       setSuccess(true)
@@ -30,7 +27,7 @@ function ProfileInfo() {
 
   const handleUpdate = async () => {
     try {
-      const updated = await updateUser(userId, { email: editEmail })
+      const updated = await updateUser({ email: editEmail })
       setMe(updated)
       alert('Profile updated!')
     } catch (err) {
@@ -43,9 +40,9 @@ function ProfileInfo() {
     const confirm = window.confirm('Are you sure you want to delete your account?')
     if (!confirm) return
     try {
-      await deleteUser(userId)
+      await deleteUser()
       alert('Account deleted.')
-      // Redirect to login or home page?
+      window.location.href = '/register'
     } catch (err) {
       console.error(err)
       alert('Failed to delete account.')
