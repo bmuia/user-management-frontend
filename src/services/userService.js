@@ -9,7 +9,7 @@ export const getUser = async () => {
 }
 
 export const updateUser = async () => {
-  const res = await axios.put(`${API_URL}api/users/me/`)
+  const res = await api.put(`${API_URL}api/users/me/`)
   return res.data
 }
 
