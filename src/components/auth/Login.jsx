@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext,useEffect } from 'react'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
@@ -12,7 +12,17 @@ function Login() {
   const [error, setError] = useState('')
   const navigate = useNavigate()
 
-  const { login } = useContext(AuthContext)
+  const { login,user } = useContext(AuthContext)
+
+  useEffect(() => {
+    if (user) {
+      if (user.is_staff) {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
+      }
+    }
+  }, [user, navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
