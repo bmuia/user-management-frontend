@@ -7,7 +7,7 @@ import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import PrivateRoutes from './components/PrivateRoute';
 import { Toaster } from 'react-hot-toast';
-import CustomDashboard from './pages/user/CustomDashboard ';
+import CustomDashboard from './pages/user/CustomDashboard';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminRoute from './pages/admin/AdminRoutes';
 import AuthProvider from './context/AuthContext';
