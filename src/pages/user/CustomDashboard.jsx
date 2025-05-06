@@ -6,7 +6,7 @@ import { Menu, X, LogOut } from 'lucide-react'
 import api from '../../config/auth'
 import { API_URL } from '../../config/apiConfig'
 import { AuthContext } from '../../context/AuthContext'
-import { useNavigate } from 'react-router-dom'
+
 
 
 function CustomDashboard() {
@@ -15,7 +15,7 @@ function CustomDashboard() {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
   const [loading, setLoading] = useState(false)
   const { logout } =  useContext(AuthContext)
-  const navigate = useNavigate()
+
 
   const renderTab = () => {
     switch (activeTab) {
@@ -40,7 +40,7 @@ function CustomDashboard() {
     try {
       await api.post(`${API_URL}api/users/logout/`, {}, { withCredentials: true })
       await logout()
-      navigate('/login', { replace: true })
+      window.location.replace('/login') 
     } catch (error) {
       console.error('Logout failed:', error)
       alert('Logout failed. Please try again.')
