@@ -12,17 +12,16 @@ function Login() {
   const [error, setError] = useState('')
   const navigate = useNavigate()
 
-  const { login,user } = useContext(AuthContext)
+  const { login, user, loading: authLoading } = useContext(AuthContext)
 
   useEffect(() => {
-    if (user) {
-      if (user.is_staff) {
-        navigate('/admin');
-      } else {
-        navigate('/dashboard');
+    if (!authLoading) {
+      if (user) {
+        navigate(user.is_staff ? '/admin' : '/dashboard')
       }
     }
-  }, [user, navigate])
+  }, [user, loading, navigate])
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault()

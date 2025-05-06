@@ -40,7 +40,7 @@ function CustomDashboard() {
     try {
       await api.post(`${API_URL}api/users/logout/`, {}, { withCredentials: true })
       await logout()
-      window.location.replace('/login') 
+      window.location.reload();
     } catch (error) {
       console.error('Logout failed:', error)
       alert('Logout failed. Please try again.')
