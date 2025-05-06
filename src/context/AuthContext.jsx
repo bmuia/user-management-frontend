@@ -8,7 +8,6 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  // Get user info on mount using the cookie
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -17,14 +16,20 @@ const AuthProvider = ({ children }) => {
         })
         setUser(res.data)
       } catch (err) {
-        setUser(null) // Not logged in
+        if (err.response?.status === 401) {
+          // Not authenticated
+          setUser(null)
+        } else {
+          console.error("Error fetching user:", err)
+        }
       } finally {
         setLoading(false)
       }
     }
-
+  
     fetchUser()
   }, [])
+  
 
   const login = async () => {
     try {
@@ -38,11 +43,17 @@ const AuthProvider = ({ children }) => {
   }
 
   const logout = async () => {
-    await axios.post(`${API_URL}api/users/logout/`, {}, {
-      withCredentials: true,
-    })
-    setUser(null)
+    try {
+      await axios.post(`${API_URL}api/users/logout/`, {}, {
+        withCredentials: true,
+      })
+    } catch (err) {
+      console.error('Logout request failed', err)
+    } finally {
+      setUser(null)
+    }
   }
+  
 
   return (
     <AuthContext.Provider value={{ user, login, logout, loading }}>
