@@ -3,7 +3,7 @@ import { Menu, X, LogOut } from 'lucide-react'
 import UserLogs from './UserLogs'
 import api from '../../config/auth'
 import { API_URL } from '../../config/apiConfig'
-
+import ChatMessage from './ChatMessage'
 
 function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('profile')
@@ -15,6 +15,8 @@ function AdminDashboard() {
     switch (activeTab) { 
       case 'userlogs':
         return <UserLogs />
+      case 'chat':
+        return <ChatMessage />
       case 'profile':
         return <div>Profile Content</div> 
       default:
@@ -55,13 +57,20 @@ function AdminDashboard() {
       <div
         className={`${sidebarOpen ? 'block' : 'hidden'} md:block bg-gray-900 text-white w-full md:w-64 p-4 space-y-4 md:min-h-screen transition duration-300 ease-in-out`}
       >
-        <div className="text-xl font-bold mb-4 md:mb-6 hidden md:block">User Dashboard</div>
+        <div className="text-xl font-bold mb-4 md:mb-6 hidden md:block">Admin Dashboard</div>
 
         <button
           onClick={() => handleTabClick('userlogs')}
           className={`block w-full text-left px-3 py-2 rounded hover:bg-gray-800 transition ${activeTab === 'userlogs' ? 'bg-gray-800 text-blue-400' : ''}`}
         >
           User Logs
+        </button>
+
+        <button 
+        onClick={() => handleTabClick('chat')}
+        className={`block w-full text-left px-3 py-2 rounded hover:bg-gray-800 transition ${activeTab === 'chat' ? 'bg-gray-800 text-blue-400' : ''}`}
+        >
+          Chat Messages
         </button>
 
         <button

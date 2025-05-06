@@ -1,16 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import ProfileInfo from './ProfileInfo'
 import ContactForm from './ContactForm'
 import AccountSettings from './AccountSettings'
 import { Menu, X, LogOut } from 'lucide-react'
 import api from '../../config/auth'
 import { API_URL } from '../../config/apiConfig'
+import { AuthContext } from '../../context/AuthContext'
 
 function CustomDashboard() {
   const [activeTab, setActiveTab] = useState('profile')
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
   const [loading, setLoading] = useState(false)
+  const { logout } =  useContext(AuthContext)
 
   const renderTab = () => {
     switch (activeTab) {
@@ -34,6 +36,7 @@ function CustomDashboard() {
     setLoading(true)
     try {
       await api.post(`${API_URL}api/users/logout/`, {}, { withCredentials: true })
+      await logout()
       window.location.href = '/login'
     } catch (error) {
       console.error('Logout failed:', error)
