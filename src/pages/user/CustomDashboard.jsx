@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react'
 import ProfileInfo from './ProfileInfo'
 import ContactForm from './ContactForm'
 import AccountSettings from './AccountSettings'
+import Inbox from './Inbox'
 import { Menu, X, LogOut } from 'lucide-react'
 import api from '../../config/auth'
 import { API_URL } from '../../config/apiConfig'
@@ -19,6 +20,8 @@ function CustomDashboard() {
 
   const renderTab = () => {
     switch (activeTab) {
+      case 'inbox':
+        return <Inbox />
       case 'profile':
         return <ProfileInfo />
       case 'support':
@@ -66,6 +69,15 @@ function CustomDashboard() {
         } md:block bg-gray-900 text-white w-full md:w-64 p-4 space-y-4 md:min-h-screen transition duration-300 ease-in-out`}
       >
         <div className="text-xl font-bold mb-4 md:mb-6 hidden md:block">User Dashboard</div>
+
+        <button
+        onClick={() => handleTabClick('inbox')}
+        className={`block w-full text-left px-3 py-2 rounded hover:bg-gray-800 transition ${
+          activeTab === 'inbox' ? 'bg-gray-800 text-blue-400' : ''
+        }`}
+        >
+          Inbox
+        </button>
 
         <button
           onClick={() => handleTabClick('profile')}

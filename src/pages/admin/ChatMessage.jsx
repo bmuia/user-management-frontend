@@ -1,24 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { getUserMessages } from '../../services/UserMessages';
+import { getUserMessages, sendReplyToMessage } from '../../services/UserMessages';
+import { Dialog } from '@headlessui/react';
 
 const PAGE_SIZE = 5;
 
 function ChatMessage() {
   const [messages, setMessages] = useState([]);
   const [page, setPage] = useState(1);
+  const [selectedMessage, setSelectedMessage] = useState(null);
+  const [replyText, setReplyText] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const data = await getUserMessages();
-        setMessages(data);
-      } catch (error) {
-        console.error('Error fetching messages:', error);
-      }
-    };
-
     fetchMessages();
   }, []);
+
+  const fetchMessages = async () => {
+    try {
+      const data = await getUserMessages();
+      setMessages(data);
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+    }
+  };
 
   const sortedMessages = [...messages].sort(
     (a, b) => new Date(b.created_at) - new Date(a.created_at)
@@ -26,6 +30,24 @@ function ChatMessage() {
 
   const paginated = sortedMessages.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
   const totalPages = Math.ceil(messages.length / PAGE_SIZE);
+
+  const openModal = (msg) => {
+    setSelectedMessage(msg);
+    setReplyText(msg.reply || '');
+    setIsModalOpen(true);
+  };
+
+  const handleReplySubmit = async () => {
+    if (!replyText.trim()) return;
+
+    try {
+      await sendReplyToMessage(selectedMessage.id, replyText);
+      setIsModalOpen(false);
+      await fetchMessages();
+    } catch (error) {
+      console.error('Failed to send reply', error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
@@ -38,13 +60,27 @@ function ChatMessage() {
           paginated.map((msg) => (
             <div
               key={msg.id}
-              className="border rounded p-3 mb-3 hover:bg-gray-50 transition cursor-pointer"
+              className="border rounded p-3 mb-3 hover:bg-gray-50 transition"
             >
               <div className="flex justify-between text-sm text-gray-600">
                 <span>{msg.user_email || `User #${msg.user}`}</span>
                 <span>{new Date(msg.created_at).toLocaleString()}</span>
               </div>
-              <p className="mt-1 text-gray-800">{msg.body}</p>
+              <p className="mt-1 text-gray-800 whitespace-pre-wrap">{msg.body}</p>
+
+              {msg.reply && (
+                <div className="mt-2 border-t pt-2 text-sm text-gray-700">
+                  <p className="font-medium text-gray-500">Reply:</p>
+                  <p className="bg-gray-100 rounded p-2">{msg.reply}</p>
+                </div>
+              )}
+
+              <button
+                onClick={() => openModal(msg)}
+                className="mt-2 text-sm text-blue-600 hover:underline"
+              >
+                {msg.reply ? 'Reply Again' : 'Reply'}
+              </button>
             </div>
           ))
         )}
@@ -72,6 +108,47 @@ function ChatMessage() {
           </div>
         )}
       </div>
+
+      {/* Modal */}
+      <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)} className="relative z-50">
+        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+        <div className="fixed inset-0 flex items-center justify-center p-4">
+          <Dialog.Panel className="mx-auto max-w-lg rounded-xl bg-white p-6 shadow-xl space-y-4 relative">
+            <Dialog.Title className="text-lg font-semibold">
+              {selectedMessage?.reply ? 'Edit Reply' : 'Write a Reply'}
+            </Dialog.Title>
+            <div>
+              <p className="text-sm text-gray-500 mb-1">
+                From: <span className="font-medium">{selectedMessage?.user_email || `User #${selectedMessage?.user}`}</span>
+              </p>
+              <p className="text-gray-800 whitespace-pre-wrap">{selectedMessage?.body}</p>
+            </div>
+
+            <div className="mt-4">
+              <textarea
+                rows={4}
+                value={replyText}
+                onChange={(e) => setReplyText(e.target.value)}
+                className="w-full border rounded p-2 text-sm"
+                placeholder="Write your reply..."
+              />
+              <button
+                onClick={handleReplySubmit}
+                className="mt-2 px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+              >
+                {selectedMessage?.reply ? 'Update Reply' : 'Send Reply'}
+              </button>
+            </div>
+
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
+            >
+              ✕
+            </button>
+          </Dialog.Panel>
+        </div>
+      </Dialog>
     </div>
   );
 }
