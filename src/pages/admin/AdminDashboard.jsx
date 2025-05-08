@@ -4,6 +4,7 @@ import UserLogs from './UserLogs'
 import api from '../../config/auth'
 import { API_URL } from '../../config/apiConfig'
 import ChatMessage from './ChatMessage'
+import AllUserProfile from './AllUserProfile'
 
 function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('profile')
@@ -13,6 +14,8 @@ function AdminDashboard() {
 
   const renderTab = () => {
     switch (activeTab) { 
+      case 'profiles':
+        return <AllUserProfile />
       case 'userlogs':
         return <UserLogs />
       case 'chat':
@@ -58,6 +61,12 @@ function AdminDashboard() {
         className={`${sidebarOpen ? 'block' : 'hidden'} md:block bg-gray-900 text-white w-full md:w-64 p-4 space-y-4 md:min-h-screen transition duration-300 ease-in-out`}
       >
         <div className="text-xl font-bold mb-4 md:mb-6 hidden md:block">Admin Dashboard</div>
+
+        <button onClick={()=> handleTabClick('profiles')}
+        className={`block w-full text-left px-3 py-2 rounded hover:bg-gray-800 transition ${activeTab === 'profiles' ? 'bg-gray-800 text-blue-400' : ''}`}
+          >
+            Users
+        </button>
 
         <button
           onClick={() => handleTabClick('userlogs')}

@@ -8,10 +8,11 @@ export const getUser = async () => {
   return res.data
 }
 
-export const updateUser = async () => {
-  const res = await api.put(`${API_URL}api/users/me/`)
-  return res.data
+export const updateUser = async (data) => {
+  const res = await api.put(`${API_URL}api/users/me/`, data)
+  return res 
 }
+
 
 export const deleteUser = async () => {
   const res = await axios.delete(`${API_URL}api/users/me/`)
