@@ -32,7 +32,7 @@ function AdminDashboard() {
   const handleLogout = async () => {
     setLoading(true)
     try {
-      await api.post(`${API_URL}/api/users/logout/`, {}, { withCredentials: true }) // Correct API URL
+      await api.post(`${API_URL}api/users/logout/`, {}, { withCredentials: true }) // Correct API URL
       window.location.href = '/login' // Redirect after logout
     } catch (error) {
       console.error('Logout failed:', error)
