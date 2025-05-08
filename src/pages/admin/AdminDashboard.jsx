@@ -5,6 +5,7 @@ import api from '../../config/auth'
 import { API_URL } from '../../config/apiConfig'
 import ChatMessage from './ChatMessage'
 import AllUserProfile from './AllUserProfile'
+import ProfileInfo from '../user/ProfileInfo'
 
 function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('profile')
@@ -21,7 +22,7 @@ function AdminDashboard() {
       case 'chat':
         return <ChatMessage />
       case 'profile':
-        return <div>Profile Content</div> 
+        return <ProfileInfo />
       default:
         return <div>Select a tab</div>
     }
