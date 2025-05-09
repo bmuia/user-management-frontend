@@ -6,12 +6,14 @@ import { API_URL } from '../../config/apiConfig'
 import ChatMessage from './ChatMessage'
 import AllUserProfile from './AllUserProfile'
 import ProfileInfo from '../user/ProfileInfo'
+import { useNavigate } from 'react-router-dom'
 
 function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('profile')
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
   const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
 
   const renderTab = () => {
     switch (activeTab) { 
@@ -36,8 +38,8 @@ function AdminDashboard() {
   const handleLogout = async () => {
     setLoading(true)
     try {
-      await api.post(`${API_URL}api/users/logout/`, {}, { withCredentials: true }) // Correct API URL
-      window.location.href = '/login' // Redirect after logout
+      await api.post(`${API_URL}api/users/logout/`, {}, { withCredentials: true }) 
+      navigate('/login', { replace: true })
     } catch (error) {
       console.error('Logout failed:', error)
       alert('Logout failed. Please try again.')
