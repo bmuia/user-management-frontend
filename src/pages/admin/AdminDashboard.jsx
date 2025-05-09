@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState,useContext } from 'react'
 import { Menu, X, LogOut } from 'lucide-react'
 import UserLogs from './UserLogs'
 import api from '../../config/auth'
