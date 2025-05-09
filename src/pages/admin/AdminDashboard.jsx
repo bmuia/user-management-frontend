@@ -7,6 +7,7 @@ import ChatMessage from './ChatMessage'
 import AllUserProfile from './AllUserProfile'
 import ProfileInfo from '../user/ProfileInfo'
 import { useNavigate } from 'react-router-dom'
+import { AuthContext } from '../../context/AuthContext'
 
 function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('profile')
@@ -14,6 +15,8 @@ function AdminDashboard() {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
+  const { logout } =  useContext(AuthContext)
+
 
   const renderTab = () => {
     switch (activeTab) { 
@@ -39,6 +42,7 @@ function AdminDashboard() {
     setLoading(true)
     try {
       await api.post(`${API_URL}api/users/logout/`, {}, { withCredentials: true }) 
+      await logout()
       navigate('/login', { replace: true })
     } catch (error) {
       console.error('Logout failed:', error)
