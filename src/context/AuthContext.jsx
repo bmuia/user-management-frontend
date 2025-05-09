@@ -4,7 +4,7 @@ import { API_URL } from '../config/apiConfig'
 
 export const AuthContext = createContext()
 
-const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [authLoading, setAuthLoading] = useState(true)
 
@@ -64,5 +64,3 @@ const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   )
 }
-
-export default AuthProvider
