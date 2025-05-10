@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { getAllProfiles } from '../../services/AllProfile'
+import api from '../../config/auth'
+import { API_URL } from '../../config/apiConfig'
+import { useNavigate } from 'react-router-dom'
 
 function AllUserProfile() {
   const [profiles, setProfiles] = useState([])
   const [selectedProfile, setSelectedProfile] = useState(null)
+  const [impersonating, setImpersonating] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchProfiles = async () => {
@@ -23,6 +28,19 @@ function AllUserProfile() {
 
   const closeModal = () => {
     setSelectedProfile(null)
+  }
+
+  const handleImpersonate = async (email) => {
+    setImpersonating(true)
+    try {
+      await api.post(`${API_URL}api/users/impersonate/`, { email })
+      navigate('/dashboard')
+    } catch (error) {
+      console.error('Impersonation failed:', error)
+      alert('Failed to impersonate user. Please try again.')
+    } finally {
+      setImpersonating(false)
+    }
   }
 
   return (
@@ -46,12 +64,21 @@ function AllUserProfile() {
               <span className="font-medium">Verified:</span>{' '}
               {profile.is_verified ? '✅ Yes' : '❌ No'}
             </p>
-            <button
-              className="mt-4 text-blue-600 hover:underline text-sm"
-              onClick={() => openModal(profile)}
-            >
-              View Details
-            </button>
+            <div className="mt-4 flex flex-col space-y-2">
+              <button
+                className="text-blue-600 hover:underline text-sm"
+                onClick={() => openModal(profile)}
+              >
+                View Details
+              </button>
+              <button
+                className="bg-indigo-600 text-white text-sm px-3 py-1.5 rounded hover:bg-indigo-700 disabled:opacity-50"
+                onClick={() => handleImpersonate(profile.email)}
+                disabled={impersonating}
+              >
+                {impersonating ? 'Switching...' : 'Impersonate'}
+              </button>
+            </div>
           </div>
         ))}
       </div>
