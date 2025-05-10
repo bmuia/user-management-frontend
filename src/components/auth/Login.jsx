@@ -1,13 +1,15 @@
-import React, { useState, useContext,useEffect } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../../context/AuthContext'
 import { API_URL } from '../../config/apiConfig'
+import AuthFormInput from './AuthFormInput'
 
 function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const navigate = useNavigate()
@@ -15,13 +17,10 @@ function Login() {
   const { login, user, loading: authLoading } = useContext(AuthContext)
 
   useEffect(() => {
-    if (!authLoading) {
-      if (user) {
-        navigate(user.is_staff ? '/admin' : '/dashboard')
-      }
+    if (!authLoading && user) {
+      navigate(user.is_staff ? '/admin' : '/dashboard')
     }
-  }, [user, loading, navigate])
-  
+  }, [user, authLoading, navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -29,16 +28,15 @@ function Login() {
     setError('')
 
     try {
-      const res = await axios.post(
+      await axios.post(
         `${API_URL}api/users/login/`,
         { email, password },
-        { withCredentials: true } // Cookie will be set here
+        { withCredentials: true }
       )
-      
-      await login() // call context login to fetch user info
+
+      await login()
       toast.success('Login successful!')
       navigate('/dashboard')
-      
     } catch (err) {
       console.error(err)
       toast.error('Login failed. Please check your credentials.')
@@ -54,29 +52,23 @@ function Login() {
         <h2 className="text-3xl font-bold text-center text-gray-800">Login</h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="you@example.com"
-            />
-          </div>
+          <AuthFormInput
+            label="Email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+          />
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="••••••••"
-            />
-          </div>
+          <AuthFormInput
+            label="Password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••••"
+            showPassword={showPassword}
+            setShowPassword={setShowPassword}
+          />
 
           <button
             type="submit"
@@ -91,9 +83,7 @@ function Login() {
           </button>
         </form>
 
-        {error && (
-          <p className="text-red-500 text-center mt-2">{error}</p>
-        )}
+        {error && <p className="text-red-500 text-center mt-2">{error}</p>}
 
         <div className="mt-6 text-center text-sm text-gray-600">
           <p>
