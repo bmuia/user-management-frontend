@@ -8,7 +8,7 @@ export const AuthContext = createContext()
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [authLoading, setAuthLoading] = useState(true)
-  const navigate = useNavigate() // 👈 Hook from React Router
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -52,11 +52,8 @@ export const AuthProvider = ({ children }) => {
       await axios.post(`${API_URL}api/users/logout/`, {}, {
         withCredentials: true,
       })
-
-      // Clean up and redirect
       setUser(null)
-      localStorage.removeItem('user')
-      navigate('/login') // 👈 Redirect to login page
+      navigate('/login')
     } catch (err) {
       console.error('Logout request failed', err)
     } finally {

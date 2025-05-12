@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { getUser, updateUser, deleteUser } from '../../services/userService'
+import Spinner from '../../components/auth/Spinner'
 
 function ProfileInfo() {
   const [me, setMe] = useState(null)
   const [formData, setFormData] = useState({})
   const [isEditing, setIsEditing] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [updating, setUpdating] = useState(false)
   const [successMsg, setSuccessMsg] = useState('')
 
   useEffect(() => {
@@ -38,25 +40,25 @@ function ProfileInfo() {
   }
 
   const handleUpdate = async () => {
+    setUpdating(true)
     try {
       const data = new FormData()
       Object.entries(formData).forEach(([key, value]) => data.append(key, value))
 
-      // Now we are not sending profile picture
       const response = await updateUser(data)
-
-      console.log('Update response:', response)
 
       if (response.status === 200) {
         await fetchProfile()
         setIsEditing(false)
-        setSuccessMsg('update success!!!')
+        setSuccessMsg('Update success!')
         setTimeout(() => setSuccessMsg(''), 3000)
       } else {
         console.error('Update failed, status:', response.status)
       }
     } catch (err) {
       console.error('Update error:', err)
+    } finally {
+      setUpdating(false)
     }
   }
 
@@ -145,9 +147,10 @@ function ProfileInfo() {
           <div className="sm:col-span-2 text-right mt-4">
             <button
               onClick={handleUpdate}
-              className="bg-green-600 text-white px-5 py-2 rounded-md hover:bg-green-700 transition"
+              disabled={updating}
+              className="bg-green-600 text-white px-5 py-2 rounded-md hover:bg-green-700 transition flex items-center justify-center gap-2 disabled:opacity-50"
             >
-              Save Changes
+              {updating ? <Spinner /> : 'Save Changes'}
             </button>
           </div>
         </div>

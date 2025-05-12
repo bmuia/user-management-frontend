@@ -37,13 +37,10 @@ function AdminDashboard() {
     setActiveTab(tab)
     setSidebarOpen(false)
   }
-
   const handleLogout = async () => {
     setLoading(true)
     try {
-      await api.post(`${API_URL}api/users/logout/`, {}, { withCredentials: true }) 
-      await logout()
-      navigate('/login', { replace: true })
+      await logout() 
     } catch (error) {
       console.error('Logout failed:', error)
       alert('Logout failed. Please try again.')
@@ -52,6 +49,7 @@ function AdminDashboard() {
       setShowLogoutConfirm(false)
     }
   }
+  
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row relative">

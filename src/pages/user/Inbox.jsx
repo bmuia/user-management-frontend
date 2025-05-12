@@ -1,29 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import { fetchNotifications } from '../../services/UserMessages';
+import Spinner from '../../components/auth/Spinner';
 
 function Inbox() {
   const [notifications, setNotifications] = useState([]);
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const loadNotifications = async () => {
-      setLoading(true);
-      try {
-        const allNotifications = await fetchNotifications();
-        setNotifications(allNotifications);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Function to load notifications
+  const loadNotifications = async () => {
+    setLoading(true);
+    try {
+      const allNotifications = await fetchNotifications();
+      setNotifications(allNotifications);
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  // Auto-refresh the notifications every 30 seconds
+  useEffect(() => {
     loadNotifications();
+    const intervalId = setInterval(loadNotifications, 30000); // 30 seconds interval
+    return () => clearInterval(intervalId); // Cleanup the interval on unmount
   }, []);
 
+  // Handle when a user closes a message to refresh the notifications
   const handleCloseMessage = () => {
     setSelectedMessage(null);
+    loadNotifications(); // Refresh notifications when a message is closed
   };
 
   return (
@@ -34,9 +41,13 @@ function Inbox() {
         {/* Left: Message List */}
         <div className="w-full lg:w-1/3 border-b lg:border-r overflow-y-auto max-h-full">
           {loading ? (
-            <p className="text-center text-gray-500 mt-4">Loading...</p>
+            <div className="flex justify-center items-center h-full py-10">
+              <Spinner />
+            </div>
           ) : notifications.length === 0 ? (
-            <p className="text-center text-gray-500 mt-4">No messages yet.</p>
+            <div className="flex justify-center items-center h-full py-10">
+              <p className="text-center text-gray-500 mt-4">No messages yet from an admin.</p>
+            </div>
           ) : (
             notifications.map((not) => (
               <div
@@ -80,7 +91,6 @@ function Inbox() {
                 {selectedMessage.content}
               </div>
 
-              {/* Close Button */}
               <div className="text-center mt-4">
                 <button
                   onClick={handleCloseMessage}
@@ -91,7 +101,9 @@ function Inbox() {
               </div>
             </div>
           ) : (
-            <div className="text-center text-gray-400 mt-10">Select a message to view the thread</div>
+            <div className="flex justify-center items-center h-full py-10">
+              <p className="text-center text-gray-400 mt-10">Select a message to view the thread</p>
+            </div>
           )}
         </div>
       </div>
