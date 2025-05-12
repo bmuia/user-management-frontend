@@ -47,10 +47,43 @@ function Login() {
     }
   }
 
+  const handleGoogleLogin = async () => {
+    setLoading(true)
+
+    /* global google */
+    google.accounts.id.initialize({
+      client_id: '924653410652-i3efh6uel7vtf8i8m1fu6l7b03tjftdi.apps.googleusercontent.com',
+      callback: async (response) => {
+        try {
+          const { credential } = response
+          if (!credential) throw new Error('No credential received from Google')
+
+          // Send id_token to backend
+          await axios.post(
+            `${API_URL}api/users/google/`,
+            { id_token: credential },
+            { withCredentials: true }
+          )
+
+          await login()
+          toast.success('Logged in with Google!')
+          navigate('/dashboard')
+        } catch (err) {
+          console.error('Google login failed:', err)
+          toast.error('Google login failed')
+        } finally {
+          setLoading(false)
+        }
+      }
+    })
+
+    google.accounts.id.prompt()
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-200 px-4 py-12">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 space-y-6 relative">
-        {loading && <Spinner />} {/* Spinner overlays the form */}
+        {loading && <Spinner />}
 
         <h2 className="text-3xl font-bold text-center text-gray-800">Login</h2>
 
@@ -77,14 +110,24 @@ function Login() {
             type="submit"
             disabled={loading}
             className={`w-full py-3 font-semibold rounded-lg text-white transition duration-300 ${
-              loading
-                ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-blue-600 hover:bg-blue-700'
+              loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
             }`}
           >
             Login
           </button>
         </form>
+
+        {/* Google Login */}
+        <div className="mt-4">
+          <button
+            onClick={handleGoogleLogin}
+            disabled={loading}
+            className="w-full flex items-center justify-center gap-2 py-3 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-100 transition duration-300"
+          >
+            <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" className="w-5 h-5" />
+            Continue with Google
+          </button>
+        </div>
 
         {error && <p className="text-red-500 text-center mt-2">{error}</p>}
 
