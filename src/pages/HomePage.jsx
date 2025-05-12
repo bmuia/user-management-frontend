@@ -11,12 +11,15 @@ function Homepage() {
               <li><a href="#" className="hover:text-blue-200">Features</a></li>
               <li><a href="#" className="hover:text-blue-200">Pricing</a></li>
               <li><a href="#" className="hover:text-blue-200">Contact</a></li>
-              <li><a
-                href="#"
-                className="bg-white text-blue-500 hover:bg-blue-100 font-semibold py-2 px-4 rounded-full"
-              >
-                Sign Up
-              </a></li>
+              <li>
+  <a
+    href="/register"
+    className="bg-white text-blue-500 hover:bg-blue-100 font-semibold py-2 px-4 rounded-full"
+  >
+    Sign Up
+  </a>
+</li>
+
             </ul>
           </nav>
         </div>
