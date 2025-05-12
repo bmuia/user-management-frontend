@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../../context/AuthContext'
 import { API_URL } from '../../config/apiConfig'
 import AuthFormInput from './AuthFormInput'
+import Spinner from './Spinner'
 
 function Login() {
   const [email, setEmail] = useState('')
@@ -48,7 +49,9 @@ function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-200 px-4 py-12">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 space-y-6">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 space-y-6 relative">
+        {loading && <Spinner />} {/* Spinner overlays the form */}
+
         <h2 className="text-3xl font-bold text-center text-gray-800">Login</h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -79,7 +82,7 @@ function Login() {
                 : 'bg-blue-600 hover:bg-blue-700'
             }`}
           >
-            {loading ? 'Logging in...' : 'Login'}
+            Login
           </button>
         </form>
 
