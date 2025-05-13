@@ -60,6 +60,8 @@ function Register() {
   const handleGoogleRegister = () => {
     setLoading(true)
 
+    console.log('Google Client ID:', import.meta.env.VITE_GOOGLE_CLIENT_ID)
+
     /* global google */
     google.accounts.id.initialize({
       client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
