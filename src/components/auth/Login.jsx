@@ -52,7 +52,7 @@ function Login() {
 
     /* global google */
     google.accounts.id.initialize({
-      client_id: '924653410652-i3efh6uel7vtf8i8m1fu6l7b03tjftdi.apps.googleusercontent.com',
+      client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
       callback: async (response) => {
         try {
           const { credential } = response
@@ -117,17 +117,21 @@ function Login() {
           </button>
         </form>
 
-        {/* Google Login */}
-        <div className="mt-4">
-          <button
-            onClick={handleGoogleLogin}
-            disabled={loading}
-            className="w-full flex items-center justify-center gap-2 py-3 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-100 transition duration-300"
-          >
-            <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" className="w-5 h-5" />
-            Continue with Google
-          </button>
-        </div>
+        <div className="relative w-full mt-4">
+  <span className="absolute -top-2 right-3 bg-green-100 text-green-600 text-xs px-2 py-0.5 rounded-full shadow-sm font-medium">
+    Recommended
+  </span>
+
+  <button
+    onClick={handleGoogleLogin}
+    disabled={loading}
+    className="w-full flex items-center justify-center gap-2 py-3 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-100 transition duration-300"
+  >
+    <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" className="w-5 h-5" />
+    Continue with Google
+  </button>
+</div>
+
 
         {error && <p className="text-red-500 text-center mt-2">{error}</p>}
 
