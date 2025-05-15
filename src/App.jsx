@@ -11,7 +11,7 @@ const PasswordReset = React.lazy(() => import('./components/unlock/PasswordReset
 const PasswordResetConfirm = React.lazy(() => import('./components/unlock/PasswordResetConfirm'))
 const Login = React.lazy(() => import('./components/auth/Login'))
 const Register = React.lazy(() => import('./components/auth/Register'))
-const CustomDashboard = React.lazy(() => import('./pages/user/CustomDashboard'))
+const CustomDashboard = React.lazy(() => import('./pages/user/UserDashboard'))
 const AdminDashboard = React.lazy(() => import('./pages/admin/AdminDashboard'))
 const AdminRoute = React.lazy(() => import('./pages/admin/AdminRoutes'))
 const Error = React.lazy(() => import('./pages/user/Error'))
