@@ -12,7 +12,7 @@ function PasswordReset() {
     setLoading(true)
 
     try {
-      const res = await axios.post(`${API_URL}api/users/reset-password/`, {
+      const res = await axios.post(`${API_URL}accounts/reset-password/`, {
         email,
       })
       console.log(res.data)

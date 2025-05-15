@@ -35,7 +35,7 @@ function PasswordResetConfirm() {
     }
 
     try {
-      const res = await axios.post(`${API_URL}api/users/password-reset-confirm/`, {
+      const res = await axios.post(`${API_URL}accounts/password-reset-confirm/`, {
         token,
         new_password: password,
       })

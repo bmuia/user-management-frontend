@@ -10,19 +10,24 @@ export const AuthProvider = ({ children }) => {
   const [authLoading, setAuthLoading] = useState(true)
   const navigate = useNavigate()
 
+  const getAuthHeaders = () => ({
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+    },
+  })
+
   useEffect(() => {
     const fetchUser = async () => {
+      setAuthLoading(true)
       try {
-        setAuthLoading(true)
-        const res = await axios.get(`${API_URL}api/users/me/`, {
-          withCredentials: true,
-        })
+        const res = await axios.get(`${API_URL}accounts/me/`, getAuthHeaders())
         setUser(res.data)
       } catch (err) {
         if (err.response?.status === 401) {
           setUser(null)
         } else {
-          console.error("Error fetching user:", err)
+          console.error('Error fetching user:', err)
         }
       } finally {
         setAuthLoading(false)
@@ -35,9 +40,7 @@ export const AuthProvider = ({ children }) => {
   const login = async () => {
     setAuthLoading(true)
     try {
-      const res = await axios.get(`${API_URL}api/users/me/`, {
-        withCredentials: true,
-      })
+      const res = await axios.get(`${API_URL}accounts/me/`, getAuthHeaders())
       setUser(res.data)
     } catch (err) {
       setUser(null)
@@ -46,16 +49,15 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  const logout = async () => {
+  const logout = () => {
     setAuthLoading(true)
     try {
-      await axios.post(`${API_URL}api/users/logout/`, {}, {
-        withCredentials: true,
-      })
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('refreshToken')
       setUser(null)
       navigate('/login')
     } catch (err) {
-      console.error('Logout request failed', err)
+      console.error('Logout error:', err)
     } finally {
       setAuthLoading(false)
     }

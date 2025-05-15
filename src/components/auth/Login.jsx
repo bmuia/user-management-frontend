@@ -23,29 +23,31 @@ function Login() {
     }
   }, [user, authLoading, navigate])
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  setError('');
 
-    try {
-      await axios.post(
-        `${API_URL}api/users/login/`,
-        { email, password },
-        { withCredentials: true }
-      )
+  try {
+    const res = await axios.post(
+      `${API_URL}accounts/login/`,
+      { email, password }
+    );
 
-      await login()
-      toast.success('Login successful!')
-      navigate('/dashboard')
-    } catch (err) {
-      console.error(err)
-      toast.error('Login failed. Please check your credentials.')
-      setError('Invalid credentials.')
-    } finally {
-      setLoading(false)
-    }
+    const { access, refresh } = res.data;
+    localStorage.setItem('accessToken', access);
+    localStorage.setItem('refreshToken', refresh);
+
+    await login();
+    navigate('/dashboard');
+  } catch (err) {
+    console.error(err);
+    setError('Invalid credentials.');
+  } finally {
+    setLoading(false);
   }
+};
+
 
   const handleGoogleLogin = async () => {
     setLoading(true)
@@ -125,7 +127,7 @@ function Login() {
   <button
     onClick={handleGoogleLogin}
     disabled={loading}
-    className="w-full flex items-center justify-center gap-2 py-3 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-100 transition duration-300"
+    className="w-full flex items-center justify-center gap-2 py-3 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-100 transition disabled:cursor-not-allowed"
   >
     <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" className="w-5 h-5" />
     Continue with Google
