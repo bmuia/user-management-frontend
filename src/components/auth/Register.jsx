@@ -32,7 +32,7 @@ function Register() {
     }
 
     try {
-      await axios.post(`${API_URL}api/users/pre-register/`, {
+      await axios.post(`${API_URL}accounts/pre-register/`, {
         email,
         password,
         password2: confirmPassword,

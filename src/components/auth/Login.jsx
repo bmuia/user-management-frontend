@@ -1,86 +1,51 @@
-import React, { useState, useContext, useEffect } from 'react'
-import axios from 'axios'
-import toast from 'react-hot-toast'
-import { useNavigate } from 'react-router-dom'
-import { AuthContext } from '../../context/AuthContext'
-import { API_URL } from '../../config/apiConfig'
-import AuthFormInput from './AuthFormInput'
-import Spinner from './Spinner'
+import React, { useState, useContext, useEffect } from 'react';
+ import axios from 'axios';
+ import { useNavigate } from 'react-router-dom';
+ import { AuthContext } from '../../context/AuthContext';
+ import { API_URL } from '../../config/apiConfig';
+ import AuthFormInput from './AuthFormInput';
+ import Spinner from './Spinner';
 
-function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const navigate = useNavigate()
+ function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  const { login, user, loading: authLoading } = useContext(AuthContext)
+  const { login, user, loading: authLoading } = useContext(AuthContext);
 
   useEffect(() => {
     if (!authLoading && user) {
-      navigate(user.is_staff ? '/admin' : '/dashboard')
+      navigate(user.is_staff ? '/admin' : '/dashboard');
     }
-  }, [user, authLoading, navigate])
+  }, [user, authLoading, navigate]);
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  setError('');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
 
-  try {
-    const res = await axios.post(
-      `${API_URL}accounts/login/`,
-      { email, password }
-    );
+    try {
+      const res = await axios.post(
+        `${API_URL}accounts/login/`,
+        { email, password }
+      );
 
-    const { access, refresh } = res.data;
-    localStorage.setItem('accessToken', access);
-    localStorage.setItem('refreshToken', refresh);
+      const { access, refresh } = res.data;
+      localStorage.setItem('accessToken', access);
+      localStorage.setItem('refreshToken', refresh);
 
-    await login();
-    navigate('/dashboard');
-  } catch (err) {
-    console.error(err);
-    setError('Invalid credentials.');
-  } finally {
-    setLoading(false);
-  }
-};
-
-
-  const handleGoogleLogin = async () => {
-    setLoading(true)
-
-    /* global google */
-    google.accounts.id.initialize({
-      client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
-      callback: async (response) => {
-        try {
-          const { credential } = response
-          if (!credential) throw new Error('No credential received from Google')
-
-          // Send id_token to backend
-          await axios.post(
-            `${API_URL}api/users/google/`,
-            { id_token: credential },
-            { withCredentials: true }
-          )
-
-          await login()
-          toast.success('Logged in with Google!')
-          navigate('/dashboard')
-        } catch (err) {
-          console.error('Google login failed:', err)
-          toast.error('Google login failed')
-        } finally {
-          setLoading(false)
-        }
-      }
-    })
-
-    google.accounts.id.prompt()
-  }
+      await login();
+      navigate('/dashboard');
+    } catch (err) {
+      console.error(err);
+      setError('Invalid credentials.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-200 px-4 py-12">
@@ -119,22 +84,6 @@ const handleSubmit = async (e) => {
           </button>
         </form>
 
-        <div className="relative w-full mt-4">
-  <span className="absolute -top-2 right-3 bg-green-100 text-green-600 text-xs px-2 py-0.5 rounded-full shadow-sm font-medium">
-    Recommended
-  </span>
-
-  <button
-    onClick={handleGoogleLogin}
-    disabled={loading}
-    className="w-full flex items-center justify-center gap-2 py-3 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-100 transition disabled:cursor-not-allowed"
-  >
-    <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" className="w-5 h-5" />
-    Continue with Google
-  </button>
-</div>
-
-
         {error && <p className="text-red-500 text-center mt-2">{error}</p>}
 
         <div className="mt-6 text-center text-sm text-gray-600">
@@ -153,7 +102,7 @@ const handleSubmit = async (e) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+ }
 
-export default Login
+ export default Login;

@@ -20,7 +20,7 @@ function VerifyEmailPage() {
       }
 
       try {
-        const res = await axios.post(`${API_URL}api/users/verify-email/`, { token });
+        const res = await axios.post(`${API_URL}accounts/verify-email/`, { token });
 
         const message = res.data?.message || "🎉 Your email has been verified!";
         setStatusMessage(message);

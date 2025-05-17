@@ -1,141 +1,52 @@
-import React, { useState,useContext } from 'react'
-import { Menu, X, LogOut } from 'lucide-react'
-import UserLogs from './UserLogs'
-import api from '../../config/auth'
-import { API_URL } from '../../config/apiConfig'
-import ChatMessage from './ChatMessage'
-import AllUserProfile from './AllUserProfile'
-import ProfileInfo from '../user/ProfileInfo'
-import { useNavigate } from 'react-router-dom'
-import { AuthContext } from '../../context/AuthContext'
+import React, { useContext, useCallback,useState} from 'react';
+ import CreateNewUserButton from './CreateNewUser';
+ import UserList from './GetAllProfiles';
+ import { AuthContext } from '../../context/AuthContext';
+ import { useNavigate } from 'react-router-dom';
+ import { Power } from 'lucide-react';
 
-function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState('profile')
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const navigate = useNavigate()
-  const { logout } =  useContext(AuthContext)
+ function AdminDashboard() {
+  const { logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const [refreshUsers, setRefreshUsers] = useState(false); 
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
 
-  const renderTab = () => {
-    switch (activeTab) { 
-      case 'profiles':
-        return <AllUserProfile />
-      case 'userlogs':
-        return <UserLogs />
-      case 'chat':
-        return <ChatMessage />
-      case 'profile':
-        return <ProfileInfo />
-      default:
-        return <div>Select a tab</div>
-    }
-  }
-
-  const handleTabClick = (tab) => {
-    setActiveTab(tab)
-    setSidebarOpen(false)
-  }
-  const handleLogout = async () => {
-    setLoading(true)
-    try {
-      await logout() 
-    } catch (error) {
-      console.error('Logout failed:', error)
-      alert('Logout failed. Please try again.')
-    } finally {
-      setLoading(false)
-      setShowLogoutConfirm(false)
-    }
-  }
-  
+  const handleUserCreated = useCallback(() => {
+    setRefreshUsers((prev) => !prev); 
+  }, []);
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row relative">
-      {/* Mobile Header */}
-      <div className="md:hidden flex items-center justify-between bg-gray-900 text-white p-4">
-        <h1 className="text-xl font-bold">Admin User Dashboard</h1>
-        <button onClick={() => setSidebarOpen(!sidebarOpen)}>
-          {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-      </div>
+    <div className="bg-gradient-to-r from-blue-50 to-indigo-100 min-h-screen flex flex-col">
+      <header className="bg-white shadow-md p-6 flex items-center justify-between">
+        <h1 className="text-2xl font-semibold text-indigo-700 tracking-tight">Admin Dashboard</h1>
+        <CreateNewUserButton onUserCreated={handleUserCreated} /> 
+      </header>
 
-      {/* Sidebar */}
-      <div
-        className={`${sidebarOpen ? 'block' : 'hidden'} md:block bg-gray-900 text-white w-full md:w-64 p-4 space-y-4 md:min-h-screen transition duration-300 ease-in-out`}
-      >
-        <div className="text-xl font-bold mb-4 md:mb-6 hidden md:block">Admin Dashboard</div>
-
-        <button onClick={()=> handleTabClick('profiles')}
-        className={`block w-full text-left px-3 py-2 rounded hover:bg-gray-800 transition ${activeTab === 'profiles' ? 'bg-gray-800 text-blue-400' : ''}`}
-          >
-            Users
-        </button>
-
-        <button
-          onClick={() => handleTabClick('userlogs')}
-          className={`block w-full text-left px-3 py-2 rounded hover:bg-gray-800 transition ${activeTab === 'userlogs' ? 'bg-gray-800 text-blue-400' : ''}`}
-        >
-          User Logs
-        </button>
-
-        <button 
-        onClick={() => handleTabClick('chat')}
-        className={`block w-full text-left px-3 py-2 rounded hover:bg-gray-800 transition ${activeTab === 'chat' ? 'bg-gray-800 text-blue-400' : ''}`}
-        >
-          Chat Messages
-        </button>
-
-        <button
-          onClick={() => handleTabClick('profile')}  // New profile button
-          className={`block w-full text-left px-3 py-2 rounded hover:bg-gray-800 transition ${activeTab === 'profile' ? 'bg-gray-800 text-blue-400' : ''}`}
-        >
-          Profile
-        </button>
-
-        {/* Logout Button */}
-        <button
-          onClick={() => setShowLogoutConfirm(true)}
-          className="block w-full text-left px-3 py-2 rounded bg-red-600 hover:bg-red-700 text-white mt-6 flex items-center gap-2 disabled:opacity-50"
-          disabled={loading}
-        >
-          <LogOut size={18} />
-          Logout
-        </button>
-      </div>
-
-      {/* Content */}
-      <div className="flex-1 p-4 md:p-10 bg-gray-50">
-        {renderTab()}  {/* Render the active tab content */}
-      </div>
-
-      {/* Logout Confirmation Modal */}
-      {showLogoutConfirm && (
-        <div className="fixed inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-2xl shadow-lg w-80">
-            <h2 className="text-lg font-semibold mb-2">Confirm Logout</h2>
-            <p className="text-sm text-gray-600 mb-4">Are you sure you want to log out?</p>
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() => setShowLogoutConfirm(false)}
-                className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-sm"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleLogout}
-                disabled={loading}
-                className="px-4 py-2 rounded bg-red-600 hover:bg-red-700 text-white text-sm"
-              >
-                {loading ? 'Logging out...' : 'Logout'}
-              </button>
-            </div>
+      <main className="flex-1 p-6 overflow-y-auto">
+        <div className="grid grid-cols-1 gap-6">
+          <div className="bg-white shadow-md rounded-lg p-4">
+            <h2 className="text-lg font-semibold text-gray-800 mb-3">User Management</h2>
+            <UserList refresh={refreshUsers} /> 
           </div>
         </div>
-      )}
-    </div>
-  )
-}
+      </main>
 
-export default AdminDashboard
+      <footer className="bg-gray-100 border-t border-gray-200 p-4 text-center text-sm text-gray-600">
+        <p className="mb-2">&copy; 2025 User Management Platform</p>
+        <button
+          onClick={handleLogout}
+          className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-400 flex items-center justify-center"
+        >
+          <Power className="mr-2 h-4 w-4" /> Logout
+        </button>
+      </footer>
+    </div>
+  );
+ }
+
+ export default AdminDashboard;
