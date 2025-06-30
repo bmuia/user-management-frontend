@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
- import { useNavigate } from 'react-router-dom';
- import axios from 'axios';
- import { API_URL } from '../../config/apiConfig';
- import AuthFormInput from './AuthFormInput';
- import Spinner from './Spinner';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { API_URL } from '../../config/apiConfig';
+import AuthFormInput from './AuthFormInput';
+import Spinner from './Spinner';
 
- function Register() {
+function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -16,7 +16,6 @@ import React, { useState } from 'react';
   const [modalMessage, setModalMessage] = useState('');
   const [modalType, setModalType] = useState('');
   const navigate = useNavigate();
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,18 +36,15 @@ import React, { useState } from 'react';
         password2: confirmPassword,
       });
 
-      setModalMessage('Registration successful! Please check your email to verify your account.');
+      setModalMessage('Registration successful! Please check your email.');
       setModalType('success');
       setShowModal(true);
       setEmail('');
       setPassword('');
       setConfirmPassword('');
     } catch (err) {
-      if (err.response?.data?.email) {
-        setModalMessage(err.response.data.email[0]);
-      } else {
-        setModalMessage('Registration failed. Please try again.');
-      }
+      const errorMsg = err.response?.data?.email?.[0] || 'Registration failed. Please try again.';
+      setModalMessage(errorMsg);
       setModalType('error');
       setShowModal(true);
     } finally {
@@ -64,84 +60,94 @@ import React, { useState } from 'react';
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-200 px-4 py-12">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 space-y-6 relative">
-        {loading && <Spinner />}
+    <div className="min-h-screen flex flex-col md:flex-row">
+      {/* Left Image Section */}
+      <div className="hidden md:block md:w-1/2 h-screen">
 
-        <h2 className="text-3xl font-bold text-center text-gray-800">Create an Account</h2>
-
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <AuthFormInput
-            label="Email"
-            type="email"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
-            showPassword={false}
-            setShowPassword={() => {}}
-          />
-
-          <AuthFormInput
-            label="Password"
-            type="password"
-            name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
-            showPassword={showPassword}
-            setShowPassword={setShowPassword}
-          />
-
-          <AuthFormInput
-            label="Confirm Password"
-            type="password"
-            name="confirmPassword"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="••••••••"
-            showPassword={showConfirmPassword}
-            setShowPassword={setShowConfirmPassword}
-          />
-
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full py-3 font-semibold rounded-lg text-white transition duration-300 ${
-              loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
-            }`}
-          >
-            Register
-          </button>
-        </form>
-
-        <p className="text-center text-sm text-gray-600">
-          Already have an account?{' '}
-          <a href="/login" className="text-blue-600 hover:underline font-medium">
-            Login here
-          </a>
-        </p>
+        <img
+          src="https://images.pexels.com/photos/3184660/pexels-photo-3184660.jpeg"
+          alt="Register"
+          className="w-full h-full object-cover"
+        />
       </div>
 
+      {/* Right Form Section */}
+      <div className="w-full md:w-1/2 flex items-center justify-center min-h-screen p-6">
+
+        <div className="w-full max-w-md space-y-6">
+          {loading && <Spinner />}
+          <h2 className="text-4xl font-semibold text-gray-800 text-center">Create Account</h2>
+
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <AuthFormInput
+              label="Email"
+              type="email"
+              name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              showPassword={false}
+              setShowPassword={() => {}}
+            />
+            <AuthFormInput
+              label="Password"
+              type="password"
+              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              showPassword={showPassword}
+              setShowPassword={setShowPassword}
+            />
+            <AuthFormInput
+              label="Confirm Password"
+              type="password"
+              name="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="••••••••"
+              showPassword={showConfirmPassword}
+              setShowPassword={setShowConfirmPassword}
+            />
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition"
+            >
+              Register
+            </button>
+          </form>
+
+          <p className="text-center text-sm text-gray-600">
+            Already have an account?{' '}
+            <a href="/login" className="text-blue-600 hover:underline font-medium">
+              Login
+            </a>
+          </p>
+        </div>
+      </div>
+
+      {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full space-y-4">
-            <h3 className="text-lg font-semibold text-center text-gray-800">
-              {modalType === 'success' ? 'Registration Successful!' : 'Registration Failed'}
+        <div className="fixed inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 max-w-sm w-full shadow-lg">
+            <h3 className="text-lg font-semibold text-gray-800 text-center mb-2">
+              {modalType === 'success' ? 'Success' : 'Error'}
             </h3>
             <p className="text-center text-gray-600">{modalMessage}</p>
-            <div className="flex justify-center space-x-4">
+            <div className="flex justify-center mt-4 space-x-4">
               {modalType === 'success' && (
                 <button
                   onClick={() => window.open('https://mail.google.com', '_blank')}
-                  className="px-6 py-2 bg-green-500 text-white rounded-lg"
+                  className="bg-green-500 text-white px-4 py-2 rounded-md"
                 >
-                  Go to Gmail
+                  Open Gmail
                 </button>
               )}
               <button
                 onClick={handleModalClose}
-                className="px-6 py-2 bg-gray-300 text-gray-800 rounded-lg"
+                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md"
               >
                 {modalType === 'success' ? 'Close' : 'Try Again'}
               </button>
@@ -151,6 +157,6 @@ import React, { useState } from 'react';
       )}
     </div>
   );
- }
+}
 
- export default Register;
+export default Register;

@@ -6,13 +6,11 @@ import { API_URL } from '../../config/apiConfig'
 
 function PasswordResetConfirm() {
   const [searchParams] = useSearchParams()
-  const [loading, setLoading] = useState(false)
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
-
   const token = searchParams.get('token')
-
 
   useEffect(() => {
     if (!token) toast.error('Invalid password reset link.')
@@ -23,7 +21,7 @@ function PasswordResetConfirm() {
     setLoading(true)
 
     if (!token) {
-      toast.error('Invalid or missing password reset token.')
+      toast.error('Missing token.')
       setLoading(false)
       return
     }
@@ -35,61 +33,56 @@ function PasswordResetConfirm() {
     }
 
     try {
-      const res = await axios.post(`${API_URL}accounts/password-reset-confirm/`, {
+      await axios.post(`${API_URL}accounts/password-reset-confirm/`, {
         token,
         new_password: password,
       })
-      console.log(res.data)
-      toast.success('🎉 Your password has been reset! Redirecting to login...')
+      toast.success('Password reset! Redirecting to login...')
       setPassword('')
       setConfirmPassword('')
-      setTimeout(() => {
-        navigate('/login')
-      }, 3000)
-    } catch (err) {
-      console.error(err)
-      toast.error('❌ Password reset failed. The link may be invalid or expired.')
+      setTimeout(() => navigate('/login'), 3000)
+    } catch {
+      toast.error('Reset failed. Link may be invalid or expired.')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-100 to-orange-200 px-4 py-12">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 space-y-6">
-        <h2 className="text-2xl font-bold text-center text-gray-800">Reset Your Password</h2>
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">New Password</label>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+      <div className="w-full max-w-sm bg-white rounded-xl shadow-sm p-6 space-y-5">
+        <h2 className="text-xl font-semibold text-center text-gray-800">Set New Password</h2>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-1">
+            <label className="text-sm text-gray-600">New Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
               placeholder="••••••••"
+              className="w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Confirm New Password</label>
+          <div className="space-y-1">
+            <label className="text-sm text-gray-600">Confirm Password</label>
             <input
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
-              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
               placeholder="••••••••"
+              className="w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-3 font-semibold rounded-lg text-white transition duration-300 ${
-              loading
-                ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-yellow-500 hover:bg-yellow-600'
+            className={`w-full py-2 text-sm font-medium rounded-md text-white ${
+              loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-yellow-500 hover:bg-yellow-600'
             }`}
           >
             {loading ? 'Resetting...' : 'Reset Password'}
