@@ -1,12 +1,13 @@
 import React, { useState, useContext, useEffect } from 'react';
- import axios from 'axios';
- import { useNavigate } from 'react-router-dom';
- import { AuthContext } from '../../context/AuthContext';
- import { API_URL } from '../../config/apiConfig';
- import AuthFormInput from './AuthFormInput';
- import Spinner from './Spinner';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
+import { API_URL } from '../../config/apiConfig';
+import AuthFormInput from './AuthFormInput';
+import Spinner from './Spinner';
+import { FaGoogle } from 'react-icons/fa';
 
- function Login() {
+function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -28,19 +29,13 @@ import React, { useState, useContext, useEffect } from 'react';
     setError('');
 
     try {
-      const res = await axios.post(
-        `${API_URL}accounts/login/`,
-        { email, password }
-      );
-
+      const res = await axios.post(`${API_URL}accounts/login/`, { email, password });
       const { access, refresh } = res.data;
       localStorage.setItem('accessToken', access);
       localStorage.setItem('refreshToken', refresh);
-
       await login();
       navigate('/dashboard');
     } catch (err) {
-      console.error(err);
       setError('Invalid credentials.');
     } finally {
       setLoading(false);
@@ -48,12 +43,11 @@ import React, { useState, useContext, useEffect } from 'react';
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-purple-200 px-4 py-12">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 space-y-6 relative">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12">
+      <div className="w-full max-w-sm bg-white rounded-2xl shadow-xl px-8 py-12 space-y-8 relative">
         {loading && <Spinner />}
-
-        <h2 className="text-3xl font-bold text-center text-gray-800">Login</h2>
-
+        <h2 className="text-3xl font-bold text-center text-gray-800">Welcome Back</h2>
+        <p className="text-center text-gray-400">Enter your email and password to access your account</p>
         <form onSubmit={handleSubmit} className="space-y-6">
           <AuthFormInput
             label="Email"
@@ -62,7 +56,6 @@ import React, { useState, useContext, useEffect } from 'react';
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
           />
-
           <AuthFormInput
             label="Password"
             type="password"
@@ -72,7 +65,11 @@ import React, { useState, useContext, useEffect } from 'react';
             showPassword={showPassword}
             setShowPassword={setShowPassword}
           />
-
+          <div className="text-right">
+            <a href="/reset-password" className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+              Forgot your password?
+            </a>
+          </div>
           <button
             type="submit"
             disabled={loading}
@@ -86,23 +83,28 @@ import React, { useState, useContext, useEffect } from 'react';
 
         {error && <p className="text-red-500 text-center mt-2">{error}</p>}
 
-        <div className="mt-6 text-center text-sm text-gray-600">
+        <div className="flex flex-col items-center mt-8 space-y-4">
+          <p className="text-sm text-gray-400">or continue with</p>
+          <button
+            type="button"
+            className="flex items-center gap-2 px-4 py-2 border rounded-lg hover:bg-gray-50 transition text-sm justify-center w-full max-w-xs"
+          >
+            <FaGoogle size={18} />
+            <span>Continue with Google</span>
+          </button>
+        </div>
+
+        <div className="mt-10 text-center text-sm text-gray-600">
           <p>
             Don’t have an account?{' '}
-            <a href="/" className="text-blue-600 hover:text-blue-700 font-medium">
+            <a href="/register" className="text-blue-600 hover:text-blue-700 font-medium gap-4">
               Register here
-            </a>
-          </p>
-          <p className="mt-2">
-            Forgot your password?{' '}
-            <a href="/reset-password" className="text-blue-600 hover:text-blue-700 font-medium">
-              Reset it here
             </a>
           </p>
         </div>
       </div>
     </div>
   );
- }
+}
 
- export default Login;
+export default Login;
