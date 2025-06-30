@@ -17,6 +17,7 @@ const AdminRoute = React.lazy(() => import('./pages/admin/AdminRoutes'))
 const Error = React.lazy(() => import('./pages/user/Error'))
 const Homepage = React.lazy(() => import('./pages/HomePage'))
 const PolicyPage = React.lazy(() => import('./pages/PolicyPage'))
+const LandingPage = React.lazy(() => import('./pages/LandingPage/LandingPage'))
 
 import PrivateRoutes from './components/PrivateRoute'
 
@@ -30,7 +31,8 @@ function AppContent() {
   return (
     <Suspense fallback={<Spinner />}>
       <Routes>
-        <Route path="/" element={<Register />} />
+        <Route path='/' element={<LandingPage />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/verify-email" element={<VerifyEmailPage />} />
         <Route path="/reset-password" element={<PasswordReset />} />
