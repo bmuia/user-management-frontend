@@ -1,23 +1,46 @@
-import React from 'react';
+import React from "react";
 
 function HeroSection() {
   return (
-    <div className="flex flex-col justify-center items-center bg-gray-100 min-h-screen px-4">
-      <div className="max-w-4xl text-center">
-        <h1 className="text-5xl font-bold text-gray-800">
-          Streamline Access Management with AccessHub
-        </h1>
-        <p className="text-gray-600 mt-4 text-lg">
-          Securely manage team access, enhance collaboration, and protect your organizational data with our intuitive platform.
-        </p>
+    <section
+      id="home"
+      className="flex flex-col items-center justify-center text-center px-6 py-16 min-h-screen"
+    >
+      {/* Headline */}
+      <h1 className="text-5xl md:text-7xl font-extrabold leading-tight max-w-4xl">
+        Manage users{" "}
+        <span className="bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text animate-pulse">
+          efficiently
+        </span>{" "}
+        and smarter 🚀
+      </h1>
+
+      {/* Subtitle */}
+      <p className="mt-6 text-lg md:text-xl text-gray-600 max-w-2xl">
+        Simplify onboarding, manage permissions, and track activity with ease.
+        A modern, secure, and scalable solution for your team.
+      </p>
+
+      {/* CTA Buttons */}
+      <div className="mt-10 flex flex-col sm:flex-row gap-4">
         <a
-          href="/dashboard"
-          className="inline-block mt-6 bg-blue-500 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition"
+          href="/register"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-8 py-4 text-lg bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 transition font-semibold"
         >
-          Go to Dashboard
+          Get Started
+        </a>
+        <a
+          href="#demo"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-8 py-4 text-lg bg-white text-gray-800 rounded-lg border border-gray-300 shadow-md hover:bg-gray-50 transition font-semibold"
+        >
+          View Demo
         </a>
       </div>
-    </div>
+    </section>
   );
 }
 

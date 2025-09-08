@@ -15,9 +15,9 @@ const CustomDashboard = React.lazy(() => import('./pages/user/UserDashboard'))
 const AdminDashboard = React.lazy(() => import('./pages/admin/AdminDashboard'))
 const AdminRoute = React.lazy(() => import('./pages/admin/AdminRoutes'))
 const Error = React.lazy(() => import('./pages/user/Error'))
-const Homepage = React.lazy(() => import('./pages/HomePage'))
-const PolicyPage = React.lazy(() => import('./pages/PolicyPage'))
+const PolicyPage = React.lazy(() => import('./pages/LandingPage/PolicyPage'))
 const LandingPage = React.lazy(() => import('./pages/LandingPage/LandingPage'))
+const Terms = React.lazy(() => import('./pages/LandingPage/Terms'))
 
 import PrivateRoutes from './components/PrivateRoute'
 
@@ -38,8 +38,8 @@ function AppContent() {
         <Route path="/reset-password" element={<PasswordReset />} />
         <Route path="/password-reset-confirm" element={<PasswordResetConfirm />} />
         <Route path="/error" element={<Error />} />
-        <Route path='/home' element={<Homepage />} />
         <Route path='/privacy' element={<PolicyPage />} />
+        <Route path='/terms' element={<Terms />} />
         <Route path="*" element={<h1>Page not found</h1>} />
 
         {/* Private Routes */}
