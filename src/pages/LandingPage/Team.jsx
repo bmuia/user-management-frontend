@@ -7,11 +7,6 @@ function Team() {
       img: 'images/dev1.jpeg',
       title: 'Belam Muia',
       role: 'Fullstack Developer'
-    },
-    {
-        img: 'images/dev2.jpeg',
-        title: 'Freshia Mwangi',
-        role: 'CyberSecurity Specialist'
     }
   ]
 
